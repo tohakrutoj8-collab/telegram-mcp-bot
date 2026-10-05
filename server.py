@@ -444,6 +444,8 @@ if __name__ == "__main__":
         _log("RESET_OFFSET environment variable detected; reset last_update_id to 0")
     _log_webhook_info()
     _start_poll_thread()
+    port = int(os.environ.get("PORT", 8080))if __name__ == "__main__":
+    import os
     port = int(os.environ.get("PORT", 8080))
     mcp.run(transport="streamable-http", host="0.0.0.0", port=port, json_response=True)
 
