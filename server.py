@@ -372,7 +372,15 @@ async def send_message(text: str) -> dict:
     }
     _store_messages([sent])
     return {"message_id": sent["message_id"], "date": sent["date"], "status": "sent"}
-
+@mcp.tool()
+async def send_photo(photo_url: str, caption: str = "") -> dict:
+    """Send a photo by direct public image URL to the configured Telegram chat."""
+    result = await _call("sendPhoto", {
+        "chat_id": int(CHAT_ID),
+        "photo": photo_url,
+        "caption": caption,
+    })
+    return {"message_id": result["message_id"], "status": "sent"}
 
 @mcp.tool()
 def reset_offset() -> dict:
