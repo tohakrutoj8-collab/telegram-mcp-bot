@@ -105,12 +105,13 @@ def _store_messages(rows: list[dict]) -> None:
 async def _call(method: str, payload: dict | None = None) -> object:
     async with httpx.AsyncClient(timeout=20.0) as client:
         r = await client.post(f"{_BASE}/{method}", json=payload or {})
-        r.raise_for_status()
-        body = r.json()
+        try:
+            body = r.json()
+        except Exception:
+            raise RuntimeError(f"{method}: HTTP {r.status_code}")
         if not body.get("ok"):
-            raise RuntimeError(body.get("description", "Telegram API error"))
+            raise RuntimeError(f"{method}: {body.get('description', 'Telegram API error')}")
         return body["result"]
-
 
 def _log_webhook_info() -> None:
     """
